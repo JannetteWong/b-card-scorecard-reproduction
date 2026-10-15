@@ -1,0 +1,825 @@
+============================================================
+第1阶段：读取数据，衍生初始变量
+============================================================
+训练集样本数: 28099, 特征数: 121
+测试集样本数: 12043, 特征数: 76
+训练集违约率: 0.1399
+测试集违约率: 0.1383
+
+开始衍生逾期类型特征...
+  - 正在生成1个月窗口的逾期特征...
+  - 正在生成3个月窗口的逾期特征...
+  - 正在生成6个月窗口的逾期特征...
+  - 正在生成12个月窗口的逾期特征...
+开始衍生额度使用率类型特征...
+  - 正在生成1个月窗口的额度使用率特征...
+  - 正在生成3个月窗口的额度使用率特征...
+  - 正在生成6个月窗口的额度使用率特征...
+  - 正在生成12个月窗口的额度使用率特征...
+开始衍生还款类型特征...
+  - 正在生成1个月窗口的还款特征...
+  - 正在生成3个月窗口的还款特征...
+  - 正在生成6个月窗口的还款特征...
+  - 正在生成12个月窗口的还款特征...
+
+特征工程完成！总共生成了 39 个特征:
+特征列表: ['maxDelqL1M', 'M0FreqL1M', 'M1FreqL1M', 'M2FreqL1M', 'maxDelqL3M', 'M0FreqL3M', 'M1FreqL3M', 'M2FreqL3M', 'maxDelqL6M', 'M0FreqL6M']...
+
+检查类别型变量与bad的相关度:
+maxDelqL1M 各值的违约率:
+maxDelqL1M
+0    0.102087
+1    0.109065
+2    0.514403
+3    0.956710
+Name: label, dtype: float64
+
+maxDelqL3M 各值的违约率:
+maxDelqL3M
+0    0.047477
+1    0.050318
+2    0.434509
+3    0.958009
+Name: label, dtype: float64
+
+maxDelqL6M 各值的违约率:
+maxDelqL6M
+0    0.047886
+1    0.050380
+2    0.265044
+3    0.549407
+Name: label, dtype: float64
+
+maxDelqL12M 各值的违约率:
+maxDelqL12M
+0    0.070175
+1    0.044748
+2    0.182365
+3    0.380687
+Name: label, dtype: float64
+
+============================================================
+第2阶段：分箱，计算WOE并编码
+============================================================
+正在区分类别型变量和数值型变量...
+类别型变量数量: 13
+数值型变量数量: 26
+类别型变量: ['maxDelqL1M', 'M0FreqL1M', 'M1FreqL1M', 'M2FreqL1M', 'maxDelqL3M', 'M0FreqL3M', 'M1FreqL3M', 'M2FreqL3M', 'maxDelqL6M', 'M2FreqL6M', 'maxDelqL12M', 'M2FreqL12M', 'increaseUrateL3M']
+
+检查类别型变量的单调性...
+不满足单调性的变量: ['M1FreqL3M', 'M2FreqL3M', 'maxDelqL12M']
+
+处理M2FreqL3M变量...
+M2FreqL3M 各值的样本数量:
+M2FreqL3M
+0    27456
+1      585
+2       55
+3        3
+Name: label, dtype: int64
+
+将 M2FreqL3M>=1的合并为一组...
+M2FreqL3M_Bin 各值的违约率:
+M2FreqL3M_Bin
+0    0.120702
+1    0.958009
+Name: label, dtype: float64
+
+处理M1FreqL3M变量...
+M1FreqL3M 各值的违约率:
+M1FreqL3M
+0    0.049511
+1    0.409583
+2    0.930825
+3    0.927083
+Name: label, dtype: float64
+M1FreqL3M 各值的样本数量:
+M1FreqL3M
+0    22379
+1     4800
+2      824
+3       96
+Name: label, dtype: int64
+
+将 M1FreqL3M>=1的合并为一组...
+M1FreqL3M_Bin 各值的违约率:
+M1FreqL3M_Bin
+0    0.049511
+1    0.493357
+Name: label, dtype: float64
+
+检查类别型变量的箱占比...
+有小箱的变量数量: 6
+无小箱的变量数量: 4
+有小箱的变量及其分布:
+{'maxDelqL1M': {0: 0.6037937293142105, 1: 0.31880138083205806, 2: 0.0691839567244386, 3: 0.008220933129292857}}
+{'M2FreqL1M': {0: 0.9917790668707072, 1: 0.008220933129292857}}
+{'maxDelqL3M': {0: 0.22637816292394747, 1: 0.5700558738745151, 2: 0.18068258656891703, 3: 0.022883376632620377}}
+{'maxDelqL6M': {0: 0.05722623580910353, 1: 0.5848962596533684, 2: 0.3128581088294957, 3: 0.04501939570803232}}
+{'M2FreqL6M': {0: 0.9549806042919677, 1: 0.04003701199330937, 2: 0.004590910708566141, 3: 0.00032029609594647497, 4: 7.117691021032777e-05}}
+{'M2FreqL12M': {0: 0.9233424677034769, 1: 0.0665148225915513, 2: 0.009217409872237447, 3: 0.0008185344674187694, 4: 0.00010676536531549166}}
+
+删除部分M2频次变量（因为箱分布不合理）...
+已删除: M2FreqL1M, M2FreqL6M, M2FreqL12M
+
+对小箱变量进行重新分箱...
+正在计算 maxDelq 变量的WOE...
+  - maxDelqL1M_Bin WOE计算完成
+  - maxDelqL3M_Bin WOE计算完成
+  - maxDelqL6M_Bin WOE计算完成
+
+对满足条件的类别型变量直接计算WOE...
+  - M0FreqL1M WOE计算完成
+  - M1FreqL1M WOE计算完成
+  - M0FreqL3M WOE计算完成
+  - increaseUrateL3M WOE计算完成
+
+开始处理数值型变量分箱...
+  - 正在处理 M0FreqL6M...
+    分箱数: 5
+    M0FreqL6M 分箱和WOE计算完成
+  - 正在处理 M1FreqL6M...
+    分箱数: 5
+    M1FreqL6M 分箱和WOE计算完成
+  - 正在处理 M0FreqL12M...
+    分箱数: 5
+    M0FreqL12M 分箱和WOE计算完成
+  - 正在处理 M1FreqL12M...
+    分箱数: 5
+    M1FreqL12M 分箱和WOE计算完成
+  - 正在处理 maxUrateL1M...
+    分箱数: 5
+    maxUrateL1M 分箱和WOE计算完成
+  - 正在处理 avgUrateL1M...
+    分箱数: 5
+    avgUrateL1M 分箱和WOE计算完成
+  - 正在处理 maxUrateL3M...
+    分箱数: 5
+    maxUrateL3M 分箱和WOE计算完成
+  - 正在处理 avgUrateL3M...
+    分箱数: 5
+    avgUrateL3M 分箱和WOE计算完成
+  - 正在处理 maxUrateL6M...
+    分箱数: 5
+    maxUrateL6M 分箱和WOE计算完成
+  - 正在处理 avgUrateL6M...
+    分箱数: 5
+    avgUrateL6M 分箱和WOE计算完成
+  - 正在处理 increaseUrateL6M...
+    分箱数: 5
+    increaseUrateL6M 分箱和WOE计算完成
+  - 正在处理 maxUrateL12M...
+    分箱数: 5
+    maxUrateL12M 分箱和WOE计算完成
+  - 正在处理 avgUrateL12M...
+    分箱数: 5
+    avgUrateL12M 分箱和WOE计算完成
+  - 正在处理 increaseUrateL12M...
+    分箱数: 5
+    increaseUrateL12M 分箱和WOE计算完成
+  - 正在处理 maxPayL1M...
+    调整分箱数: 5 -> 3
+    maxPayL1M 分箱和WOE计算完成
+  - 正在处理 minPayL1M...
+    调整分箱数: 5 -> 3
+    minPayL1M 分箱和WOE计算完成
+  - 正在处理 avgPayL1M...
+    调整分箱数: 5 -> 3
+    avgPayL1M 分箱和WOE计算完成
+  - 正在处理 maxPayL3M...
+    分箱数: 5
+    maxPayL3M 分箱和WOE计算完成
+  - 正在处理 minPayL3M...
+    调整分箱数: 5 -> 2
+    minPayL3M 分箱和WOE计算完成
+  - 正在处理 avgPayL3M...
+    分箱数: 5
+    avgPayL3M 分箱和WOE计算完成
+  - 正在处理 maxPayL6M...
+    分箱数: 5
+    maxPayL6M 分箱和WOE计算完成
+  - 正在处理 minPayL6M...
+    分箱数: 5
+    minPayL6M 分箱和WOE计算完成
+  - 正在处理 avgPayL6M...
+    分箱数: 5
+    avgPayL6M 分箱和WOE计算完成
+  - 正在处理 maxPayL12M...
+    分箱数: 5
+    maxPayL12M 分箱和WOE计算完成
+  - 正在处理 minPayL12M...
+    分箱数: 5
+    minPayL12M 分箱和WOE计算完成
+  - 正在处理 avgPayL12M...
+    分箱数: 5
+    avgPayL12M 分箱和WOE计算完成
+
+============================================================
+第3阶段：单变量分析和多变量分析
+============================================================
+总共计算了 35 个变量的WOE和IV
+
+IV大于0.02的变量有 34 个:
+  - maxDelqL3M_Bin: 1.7520
+  - M1FreqL3M_Bin: 1.7515
+  - M1FreqL6M_Bin: 1.1969
+  - M0FreqL3M: 1.0261
+  - maxDelqL6M_Bin: 1.0045
+  - avgPayL3M_Bin: 0.9758
+  - M2FreqL3M_Bin: 0.7957
+  - M1FreqL12M_Bin: 0.7487
+  - maxPayL3M_Bin: 0.7270
+  - M0FreqL6M_Bin: 0.6576
+  - maxDelqL1M_Bin: 0.6506
+  - M1FreqL1M: 0.6496
+  - avgPayL6M_Bin: 0.6082
+  - avgPayL12M_Bin: 0.4189
+  - M0FreqL12M_Bin: 0.3457
+  - minPayL3M_Bin: 0.2663
+  - maxPayL1M_Bin: 0.1807
+  - minPayL1M_Bin: 0.1807
+  - avgPayL1M_Bin: 0.1807
+  - increaseUrateL6M_Bin: 0.1797
+  - maxPayL6M_Bin: 0.1723
+  - M0FreqL1M: 0.1463
+  - maxUrateL1M_Bin: 0.1403
+  - avgUrateL1M_Bin: 0.1403
+  - avgUrateL3M_Bin: 0.1123
+  - increaseUrateL3M: 0.0892
+  - maxUrateL3M_Bin: 0.0807
+  - increaseUrateL12M_Bin: 0.0772
+  - minPayL6M_Bin: 0.0622
+  - maxPayL12M_Bin: 0.0593
+  - avgUrateL6M_Bin: 0.0490
+  - maxUrateL6M_Bin: 0.0434
+  - maxUrateL12M_Bin: 0.0289
+  - avgUrateL12M_Bin: 0.0220
+
+生成WOE编码变量...
+
+多变量分析：检查变量间相关性...
+发现高相关性变量对:
+  - maxDelqL3M_Bin vs M1FreqL3M_Bin: 相关系数 = 0.9998
+  - M1FreqL6M_Bin vs maxDelqL6M_Bin: 相关系数 = 0.9432
+  - M1FreqL6M_Bin vs M1FreqL12M_Bin: 相关系数 = 0.7044
+  - M0FreqL3M vs avgPayL3M_Bin: 相关系数 = 0.8854
+  - M0FreqL3M vs maxPayL3M_Bin: 相关系数 = 0.7448
+  - M0FreqL6M_Bin vs avgPayL6M_Bin: 相关系数 = 0.7901
+  - maxDelqL1M_Bin vs M1FreqL1M: 相关系数 = 0.9986
+  - avgPayL12M_Bin vs M0FreqL12M_Bin: 相关系数 = 0.7797
+  - maxPayL1M_Bin vs minPayL1M_Bin: 相关系数 = 1.0000
+  - maxPayL1M_Bin vs avgPayL1M_Bin: 相关系数 = 1.0000
+  - maxPayL1M_Bin vs M0FreqL1M: 相关系数 = 0.8460
+  - minPayL1M_Bin vs avgPayL1M_Bin: 相关系数 = 1.0000
+  - maxUrateL1M_Bin vs avgUrateL1M_Bin: 相关系数 = 1.0000
+  - avgUrateL3M_Bin vs maxUrateL3M_Bin: 相关系数 = 0.7135
+  - maxUrateL6M_Bin vs maxUrateL12M_Bin: 相关系数 = 0.7784
+
+经相关性筛选后，剩余 20 个变量:
+  - maxDelqL3M_Bin
+  - M1FreqL6M_Bin
+  - M0FreqL3M
+  - M2FreqL3M_Bin
+  - M0FreqL6M_Bin
+  - maxDelqL1M_Bin
+  - avgPayL12M_Bin
+  - minPayL3M_Bin
+  - avgPayL1M_Bin
+  - increaseUrateL6M_Bin
+  - maxPayL6M_Bin
+  - avgUrateL1M_Bin
+  - avgUrateL3M_Bin
+  - increaseUrateL3M
+  - increaseUrateL12M_Bin
+  - minPayL6M_Bin
+  - maxPayL12M_Bin
+  - avgUrateL6M_Bin
+  - maxUrateL6M_Bin
+  - avgUrateL12M_Bin
+
+绘制相关性热力图...
+相关性热力图已生成
+
+多变量分析：计算VIF...
+最大VIF值: 3.429
+所有变量的VIF值都小于10，无多重共线性问题
+
+============================================================
+第4阶段：建立逻辑回归模型预测违约
+============================================================
+使用 20 个变量建立逻辑回归模型...
+Optimization terminated successfully.
+         Current function value: 0.257556
+         Iterations 7
+
+逻辑回归结果:
+                               coef        p-value
+intercept                 -1.816283   0.000000e+00
+increaseUrateL6M_Bin_WOE  -1.173992   1.903327e-51
+maxDelqL3M_Bin_WOE        -0.743386  9.651350e-168
+M2FreqL3M_Bin_WOE         -0.681728   6.707808e-64
+avgUrateL1M_Bin_WOE       -0.661764   1.130685e-11
+avgUrateL3M_Bin_WOE       -0.526255   2.215594e-06
+M0FreqL3M_WOE             -0.457005   4.802085e-39
+avgUrateL6M_Bin_WOE       -0.194809   2.415588e-01
+M1FreqL6M_Bin_WOE         -0.152977   2.393983e-05
+maxDelqL1M_Bin_WOE        -0.139531   3.646633e-06
+maxPayL6M_Bin_WOE         -0.136920   4.660105e-02
+maxUrateL6M_Bin_WOE       -0.123916   3.453710e-01
+avgPayL12M_Bin_WOE        -0.085567   6.952669e-02
+increaseUrateL12M_Bin_WOE -0.038580   7.057984e-01
+maxPayL12M_Bin_WOE        -0.023687   8.302923e-01
+increaseUrateL3M_WOE       0.001685   9.871766e-01
+minPayL6M_Bin_WOE          0.107551   3.110541e-01
+avgUrateL12M_Bin_WOE       0.128357   5.123554e-01
+avgPayL1M_Bin_WOE          0.136635   5.900964e-02
+M0FreqL6M_Bin_WOE          0.153221   1.010475e-03
+minPayL3M_Bin_WOE          0.202898   9.043896e-04
+
+检查个别变量的单独回归系数:
+Optimization terminated successfully.
+         Current function value: 0.682128
+         Iterations 4
+increaseUrateL3M 系数: -0.9953
+Optimization terminated successfully.
+         Current function value: 0.686302
+         Iterations 5
+minPayL6M_Bin 系数: -0.8078
+Optimization terminated successfully.
+         Current function value: 0.690373
+         Iterations 4
+avgUrateL12M_Bin 系数: -1.0179
+Optimization terminated successfully.
+         Current function value: 0.671181
+         Iterations 4
+minPayL1M_Bin 系数: -0.9692
+Optimization terminated successfully.
+         Current function value: 0.613547
+         Iterations 5
+M0FreqL6M_Bin 系数: -1.0328
+Optimization terminated successfully.
+         Current function value: 0.663533
+         Iterations 5
+minPayL3M_Bin 系数: -0.8293
+
+使用GBDT计算特征重要性...
+GBDT特征重要性排序:
+  1. maxDelqL3M_Bin: 0.5171
+  2. increaseUrateL6M_Bin: 0.1655
+  3. M2FreqL3M_Bin: 0.1036
+  4. avgUrateL1M_Bin: 0.0823
+  5. M0FreqL3M: 0.0597
+  6. avgUrateL3M_Bin: 0.0322
+  7. M1FreqL6M_Bin: 0.0245
+  8. maxDelqL1M_Bin: 0.0101
+  9. maxUrateL6M_Bin: 0.0021
+  10. increaseUrateL12M_Bin: 0.0007
+  11. M0FreqL6M_Bin: 0.0005
+  12. maxPayL6M_Bin: 0.0004
+  13. avgUrateL6M_Bin: 0.0004
+  14. avgUrateL12M_Bin: 0.0002
+  15. maxPayL12M_Bin: 0.0002
+  16. avgPayL12M_Bin: 0.0001
+  17. minPayL6M_Bin: 0.0001
+  18. increaseUrateL3M: 0.0001
+  19. avgPayL1M_Bin: 0.0001
+  20. minPayL3M_Bin: 0.0000
+特征重要性柱状图已生成
+
+逐步回归特征选择...
+初始选择前4个特征: ['maxDelqL3M_Bin', 'increaseUrateL6M_Bin', 'M2FreqL3M_Bin', 'avgUrateL1M_Bin']
+Optimization terminated successfully.
+         Current function value: 0.264310
+         Iterations 7
+
+前4个特征的回归结果:
+                              coef       p-value
+maxDelqL3M_Bin_WOE       -0.991972  0.000000e+00
+increaseUrateL6M_Bin_WOE -1.162121  8.315327e-92
+M2FreqL3M_Bin_WOE        -0.717047  9.441150e-74
+avgUrateL1M_Bin_WOE      -1.008634  2.801658e-54
+intercept                -1.817176  0.000000e+00
+
+逐步添加特征...
+Optimization terminated successfully.
+         Current function value: 0.260099
+         Iterations 7
+尝试添加变量: M0FreqL3M - 系数: -0.391697
+  保留变量 M0FreqL3M
+Optimization terminated successfully.
+         Current function value: 0.259249
+         Iterations 7
+尝试添加变量: avgUrateL3M_Bin - 系数: -0.596161
+  保留变量 avgUrateL3M_Bin
+Optimization terminated successfully.
+         Current function value: 0.258923
+         Iterations 7
+尝试添加变量: M1FreqL6M_Bin - 系数: -0.132593
+  保留变量 M1FreqL6M_Bin
+Optimization terminated successfully.
+         Current function value: 0.258479
+         Iterations 7
+尝试添加变量: maxDelqL1M_Bin - 系数: -0.134164
+  保留变量 maxDelqL1M_Bin
+Optimization terminated successfully.
+         Current function value: 0.258448
+         Iterations 7
+尝试添加变量: maxUrateL6M_Bin - 系数: -0.167141
+  保留变量 maxUrateL6M_Bin
+Optimization terminated successfully.
+         Current function value: 0.258444
+         Iterations 7
+尝试添加变量: increaseUrateL12M_Bin - 系数: -0.046962
+  保留变量 increaseUrateL12M_Bin
+Optimization terminated successfully.
+         Current function value: 0.258224
+         Iterations 7
+尝试添加变量: M0FreqL6M_Bin - 系数: 0.146827
+  移除变量 M0FreqL6M_Bin (系数为正)
+Optimization terminated successfully.
+         Current function value: 0.258400
+         Iterations 7
+尝试添加变量: maxPayL6M_Bin - 系数: -0.087362
+  保留变量 maxPayL6M_Bin
+Optimization terminated successfully.
+         Current function value: 0.258385
+         Iterations 7
+尝试添加变量: avgUrateL6M_Bin - 系数: -0.132387
+  保留变量 avgUrateL6M_Bin
+Optimization terminated successfully.
+         Current function value: 0.258375
+         Iterations 7
+尝试添加变量: avgUrateL12M_Bin - 系数: 0.147587
+  移除变量 avgUrateL12M_Bin (系数为正)
+Optimization terminated successfully.
+         Current function value: 0.258385
+         Iterations 7
+尝试添加变量: maxPayL12M_Bin - 系数: -0.012451
+  保留变量 maxPayL12M_Bin
+Optimization terminated successfully.
+         Current function value: 0.258379
+         Iterations 7
+尝试添加变量: avgPayL12M_Bin - 系数: -0.025650
+  保留变量 avgPayL12M_Bin
+Optimization terminated successfully.
+         Current function value: 0.258170
+         Iterations 7
+尝试添加变量: minPayL6M_Bin - 系数: 0.339746
+  移除变量 minPayL6M_Bin (系数为正)
+Optimization terminated successfully.
+         Current function value: 0.258379
+         Iterations 7
+尝试添加变量: increaseUrateL3M - 系数: 0.012951
+  移除变量 increaseUrateL3M (系数为正)
+Optimization terminated successfully.
+         Current function value: 0.258194
+         Iterations 7
+尝试添加变量: avgPayL1M_Bin - 系数: 0.223532
+  移除变量 avgPayL1M_Bin (系数为正)
+Optimization terminated successfully.
+         Current function value: 0.257850
+         Iterations 7
+尝试添加变量: minPayL3M_Bin - 系数: 0.292391
+  移除变量 minPayL3M_Bin (系数为正)
+
+最终选择的特征数量: 14
+最终特征列表: ['maxDelqL3M_Bin', 'increaseUrateL6M_Bin', 'M2FreqL3M_Bin', 'avgUrateL1M_Bin', 'M0FreqL3M', 'avgUrateL3M_Bin', 'M1FreqL6M_Bin', 'maxDelqL1M_Bin', 'maxUrateL6M_Bin', 'increaseUrateL12M_Bin', 'maxPayL6M_Bin', 'avgUrateL6M_Bin', 'maxPayL12M_Bin', 'avgPayL12M_Bin']
+Optimization terminated successfully.
+         Current function value: 0.258379
+         Iterations 7
+
+逐步回归最终结果:
+                               coef        p-value
+intercept                 -1.813617   0.000000e+00
+maxDelqL3M_Bin_WOE        -0.744150  3.663659e-189
+M2FreqL3M_Bin_WOE         -0.683046   1.172231e-64
+increaseUrateL6M_Bin_WOE  -1.168962   5.141206e-60
+M0FreqL3M_WOE             -0.340708   4.818643e-33
+avgUrateL1M_Bin_WOE       -0.659966   1.367724e-14
+maxDelqL1M_Bin_WOE        -0.136424   4.132263e-07
+avgUrateL3M_Bin_WOE       -0.510752   1.750319e-06
+M1FreqL6M_Bin_WOE         -0.113140   5.226974e-04
+maxPayL6M_Bin_WOE         -0.072493   2.775523e-01
+maxUrateL6M_Bin_WOE       -0.132056   3.133307e-01
+avgUrateL6M_Bin_WOE       -0.131046   3.647205e-01
+avgPayL12M_Bin_WOE        -0.025650   5.678689e-01
+increaseUrateL12M_Bin_WOE -0.032659   7.470968e-01
+maxPayL12M_Bin_WOE        -0.000267   9.980452e-01
+
+使用L1正则化进行进一步特征选择...
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27909091064823854
+            Iterations: 79
+            Function evaluations: 79
+            Gradient evaluations: 79
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2789016095050908
+            Iterations: 80
+            Function evaluations: 80
+            Gradient evaluations: 80
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2787119953869741
+            Iterations: 79
+            Function evaluations: 80
+            Gradient evaluations: 79
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27852206758681175
+            Iterations: 80
+            Function evaluations: 80
+            Gradient evaluations: 80
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27833182536552575
+            Iterations: 80
+            Function evaluations: 80
+            Gradient evaluations: 80
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2781412679656684
+            Iterations: 80
+            Function evaluations: 81
+            Gradient evaluations: 80
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2779503947122832
+            Iterations: 81
+            Function evaluations: 82
+            Gradient evaluations: 81
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27775920486813105
+            Iterations: 82
+            Function evaluations: 82
+            Gradient evaluations: 82
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2775676976386265
+            Iterations: 82
+            Function evaluations: 83
+            Gradient evaluations: 82
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.277375872342381
+            Iterations: 83
+            Function evaluations: 83
+            Gradient evaluations: 83
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27718372822679993
+            Iterations: 84
+            Function evaluations: 84
+            Gradient evaluations: 84
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.276991264492286
+            Iterations: 81
+            Function evaluations: 81
+            Gradient evaluations: 81
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2767984804424554
+            Iterations: 80
+            Function evaluations: 81
+            Gradient evaluations: 80
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27660537530999546
+            Iterations: 81
+            Function evaluations: 81
+            Gradient evaluations: 81
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2764119483289276
+            Iterations: 81
+            Function evaluations: 81
+            Gradient evaluations: 81
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2762181987212249
+            Iterations: 83
+            Function evaluations: 83
+            Gradient evaluations: 83
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27602412572775253
+            Iterations: 82
+            Function evaluations: 82
+            Gradient evaluations: 82
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27582972858448923
+            Iterations: 82
+            Function evaluations: 82
+            Gradient evaluations: 82
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2756350065208362
+            Iterations: 82
+            Function evaluations: 82
+            Gradient evaluations: 82
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27543995874147204
+            Iterations: 84
+            Function evaluations: 84
+            Gradient evaluations: 84
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.275244584549614
+            Iterations: 77
+            Function evaluations: 77
+            Gradient evaluations: 77
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27504888291772045
+            Iterations: 85
+            Function evaluations: 85
+            Gradient evaluations: 85
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2748528533017727
+            Iterations: 86
+            Function evaluations: 86
+            Gradient evaluations: 86
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27465649480631066
+            Iterations: 86
+            Function evaluations: 87
+            Gradient evaluations: 86
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.274459806664524
+            Iterations: 87
+            Function evaluations: 87
+            Gradient evaluations: 87
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27426278804248866
+            Iterations: 87
+            Function evaluations: 87
+            Gradient evaluations: 87
+C:\Users\WangZhiyi\Desktop\信贷风控评分卡模型项目合集\6-B卡行为评分卡复现项目\B_card.py:642: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27406543811846623
+            Iterations: 87
+            Function evaluations: 88
+            Gradient evaluations: 87
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27386775617397763
+            Iterations: 88
+  plt.show()
+            Function evaluations: 88
+            Gradient evaluations: 88
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27366974123530285
+            Iterations: 87
+            Function evaluations: 87
+            Gradient evaluations: 87
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2734713926065333
+            Iterations: 87
+            Function evaluations: 87
+            Gradient evaluations: 87
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27327270939797554
+            Iterations: 88
+            Function evaluations: 88
+            Gradient evaluations: 88
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2730736908299619
+            Iterations: 88
+            Function evaluations: 88
+            Gradient evaluations: 88
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.272874336049581
+            Iterations: 88
+            Function evaluations: 88
+            Gradient evaluations: 88
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27267465694426685
+            Iterations: 79
+            Function evaluations: 79
+            Gradient evaluations: 79
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27247462356918833
+            Iterations: 79
+            Function evaluations: 79
+            Gradient evaluations: 79
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2722742522378489
+            Iterations: 80
+            Function evaluations: 80
+            Gradient evaluations: 80
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2720735419213953
+            Iterations: 79
+            Function evaluations: 80
+            Gradient evaluations: 79
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27187249162835386
+            Iterations: 79
+            Function evaluations: 79
+            Gradient evaluations: 79
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2716711004614145
+            Iterations: 80
+            Function evaluations: 80
+            Gradient evaluations: 80
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2714693676259851
+            Iterations: 80
+            Function evaluations: 80
+            Gradient evaluations: 80
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2712672923514535
+            Iterations: 80
+            Function evaluations: 80
+            Gradient evaluations: 80
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27106487385294914
+            Iterations: 76
+            Function evaluations: 76
+            Gradient evaluations: 76
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27086211045162434
+            Iterations: 82
+            Function evaluations: 82
+            Gradient evaluations: 82
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2706590020535739
+            Iterations: 82
+            Function evaluations: 82
+            Gradient evaluations: 82
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27045554772990527
+            Iterations: 82
+            Function evaluations: 82
+            Gradient evaluations: 82
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2702517463056641
+            Iterations: 82
+            Function evaluations: 82
+            Gradient evaluations: 82
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27004759737461803
+            Iterations: 83
+            Function evaluations: 83
+            Gradient evaluations: 83
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.2698430990925772
+            Iterations: 82
+            Function evaluations: 83
+            Gradient evaluations: 82
+最佳正则化参数 alpha: 54
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: 0.27004759737461803
+            Iterations: 83
+            Function evaluations: 83
+            Gradient evaluations: 83
+L1正则化后保留的特征: ['maxDelqL3M_Bin', 'increaseUrateL6M_Bin', 'M2FreqL3M_Bin', 'avgUrateL1M_Bin', 'M0FreqL3M', 'avgUrateL3M_Bin', 'M1FreqL6M_Bin', 'maxDelqL1M_Bin']
+特征数量: 8
+
+建立最终逻辑回归模型...
+Optimization terminated successfully.
+         Current function value: 0.258479
+         Iterations 7
+
+计算训练集模型效果...
+训练集 KS: 0.6371
+训练集 AUC: 0.8364
+
+============================================================
+第5阶段：在测试集上测试逻辑回归的结果
+============================================================
+模型中的原始特征: ['maxDelqL3M', 'increaseUrateL6M', 'M2FreqL3M', 'avgUrateL1M', 'M0FreqL3M', 'avgUrateL3M', 'M1FreqL6M', 'maxDelqL1M']
+数值型特征: ['increaseUrateL6M', 'avgUrateL1M', 'avgUrateL3M', 'M1FreqL6M']
+类别型特征: ['maxDelqL3M', 'M2FreqL3M', 'M0FreqL3M', 'maxDelqL1M']
+
+为测试集生成特征...
+测试集特征生成完成
+
+对测试集进行分箱和WOE编码...
+  - increaseUrateL6M 分箱完成
+  - avgUrateL1M 分箱完成
+  - avgUrateL3M 分箱完成
+  - M1FreqL6M 分箱完成
+
+需要WOE编码的特征: ['increaseUrateL6M_Bin', 'avgUrateL1M_Bin', 'avgUrateL3M_Bin', 'M1FreqL6M_Bin', 'M2FreqL3M_Bin', 'maxDelqL1M_Bin', 'maxDelqL3M_Bin', 'M0FreqL3M']
+  - increaseUrateL6M_Bin WOE编码完成
+  - avgUrateL1M_Bin WOE编码完成
+  - avgUrateL3M_Bin WOE编码完成
+  - M1FreqL6M_Bin WOE编码完成
+  - M2FreqL3M_Bin WOE编码完成
+  - maxDelqL1M_Bin WOE编码完成
+  - maxDelqL3M_Bin WOE编码完成
+  - M0FreqL3M WOE编码完成
+
+在测试集上应用模型...
+
+计算测试集模型效果...
+测试集 KS: 0.6495
+测试集 AUC: 0.8443
+
+============================================================
+第6阶段：在测试集上计算分数
+============================================================
+评分基准: 基础分数 = 500, PDO = 50
+
+测试集评分统计:
+最低分数: 102
+最高分数: 857
+平均分数: 685.3
+分数标准差: 121.5
+
+各分数段违约率分析:
+  0-400: 样本数=315, 违约率=0.9524
+  400-450: 样本数=253, 违约率=0.9486
+  450-500: 样本数=545, 违约率=0.8275
+  500-550: 样本数=547, 违约率=0.3016
+  550-600: 样本数=523, 违约率=0.0593
+  600-1000: 样本数=9860, 违约率=0.0485
+基线结果已保存至: C:\Users\WangZhiyi\Desktop\信贷风控评分卡模型项目合集\6-B卡行为评分卡复现项目\outputs
+评分分布直方图已生成
+
+============================================================
+评分卡建模完成！
+============================================================
